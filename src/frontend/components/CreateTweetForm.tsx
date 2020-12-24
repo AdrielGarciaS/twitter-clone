@@ -1,15 +1,19 @@
-import { FC, FormEvent, useState } from 'react'
-import { Button, Input } from 'antd'
+import { FC } from 'react'
+import { Button, Mentions, Form, notification } from 'antd'
 import { useFeed } from '@frontend/hooks'
 import { api } from '@frontend/services/api'
 
-const CreateTweetForm: FC = () => {
-  const [tweet, setTweet] = useState('')
+interface IFormValues {
+  tweet: string
+}
 
+const CreateTweetForm: FC = () => {
   const { addItemOnFeed } = useFeed()
 
-  async function handleSubmit(e: FormEvent): Promise<void> {
-    e.preventDefault()
+  const [form] = Form.useForm()
+
+  async function handleSubmit(values: IFormValues): Promise<void> {
+    const { tweet } = values
 
     const newTweet: ITweet = {
       text: tweet,
@@ -21,15 +25,38 @@ const CreateTweetForm: FC = () => {
     console.log(_tweet)
 
     addItemOnFeed(newTweet)
-    setTweet('')
+
+    notification.success({
+      message: 'Tweet cadastrado com sucesso!',
+      placement: 'topRight',
+    })
+
+    form.resetFields()
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '2rem' }}>
-      <Input value={tweet} onChange={e => setTweet(e.target.value)} />
+    <Form form={form} onFinish={handleSubmit} style={{ marginTop: '2rem' }}>
+      <Form.Item
+        name="tweet"
+        rules={[
+          { required: true, message: 'Campo obrigatório' },
+          { whitespace: true, message: 'Campo obrigatório' },
+        ]}
+      >
+        <Mentions rows={5} />
+      </Form.Item>
 
-      <Button htmlType="submit">Tweet</Button>
-    </form>
+      <Form.Item>
+        <Button
+          type="primary"
+          size="large"
+          style={{ float: 'right' }}
+          htmlType="submit"
+        >
+          Tweet
+        </Button>
+      </Form.Item>
+    </Form>
   )
 }
 

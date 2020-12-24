@@ -8,10 +8,11 @@ interface IGetFeedRequest {
 interface IUseFeedResponse {
   feed: ITweet[]
   addItemOnFeed(tweet: ITweet): void
+  isFeedLoading: boolean
 }
 
 export const useFeed = (): IUseFeedResponse => {
-  const { data, mutate } = useSWR<IGetFeedRequest>('feed', api)
+  const { data, mutate, isValidating } = useSWR<IGetFeedRequest>('feed', api)
 
   function addItemOnFeed(tweet: ITweet): void {
     const _feed = [tweet, ...data?.data]
@@ -22,5 +23,6 @@ export const useFeed = (): IUseFeedResponse => {
   return {
     feed: data?.data,
     addItemOnFeed,
+    isFeedLoading: isValidating,
   }
 }
