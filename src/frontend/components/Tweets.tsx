@@ -1,7 +1,9 @@
-import { Card, Space } from 'antd'
+import { Space } from 'antd'
 import { FC } from 'react'
 
 import { useFeed } from '@frontend/hooks'
+
+import { Container, Tweet } from '@styles/components/Tweets'
 
 const Tweets: FC = () => {
   const { feed } = useFeed()
@@ -9,15 +11,15 @@ const Tweets: FC = () => {
   if (!feed) return null
 
   return (
-    <Space direction="vertical" size="middle">
-      {feed.map((tweet, index) => (
-        <Card key={index}>
-          <h3>{tweet.text}</h3>
-
-          <span>{tweet.author.username}</span>
-        </Card>
-      ))}
-    </Space>
+    <Container>
+      <Space direction="vertical" size="middle">
+        {feed.map((tweet, index) => (
+          <Tweet key={index}>
+            <p>{tweet.text}</p>
+          </Tweet>
+        ))}
+      </Space>
+    </Container>
   )
 }
 

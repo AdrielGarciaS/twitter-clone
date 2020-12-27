@@ -2,14 +2,19 @@ import TweetsController from '@backend/controllers/TweetsController'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const tweetRouter = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ): Promise<void> => {
   const tweetsController = new TweetsController()
 
-  switch (req.method) {
+  const { method } = request
+
+  switch (method) {
     case 'POST':
-      tweetsController.create(req, res)
+      tweetsController.create(request, response)
+      break
+    case 'GET':
+      tweetsController.index(request, response)
       break
   }
 }

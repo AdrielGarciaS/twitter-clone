@@ -1,7 +1,10 @@
 import { FC } from 'react'
-import { Button, Mentions, Form, notification } from 'antd'
+import { Button, Input, notification } from 'antd'
+
 import { useFeed } from '@frontend/hooks'
 import { api } from '@frontend/services/api'
+
+import { Form } from '@styles/components/CreateTweetForm'
 
 interface IFormValues {
   tweet: string
@@ -35,7 +38,7 @@ const CreateTweetForm: FC = () => {
   }
 
   return (
-    <Form form={form} onFinish={handleSubmit} style={{ marginTop: '2rem' }}>
+    <Form form={form} onFinish={handleSubmit}>
       <Form.Item
         name="tweet"
         rules={[
@@ -43,7 +46,7 @@ const CreateTweetForm: FC = () => {
           { whitespace: true, message: 'Campo obrigatório' },
         ]}
       >
-        <Mentions rows={5} />
+        <Input.TextArea rows={5} />
       </Form.Item>
 
       <Form.Item>

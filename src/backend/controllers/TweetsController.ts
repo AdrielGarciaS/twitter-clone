@@ -1,18 +1,31 @@
-import CreateTweetService from '@backend/services/CreateTweetService'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import CreateTweetService from '@backend/services/CreateTweetService'
+import ListTweetsService from '@backend/services/ListTweetsService'
+
 class TweetsController {
-  public async create(
-    req: NextApiRequest,
-    res: NextApiResponse,
+  public async index(
+    _: NextApiRequest,
+    response: NextApiResponse,
   ): Promise<void> {
-    const { text } = req.body
+    const listTweetsService = new ListTweetsService()
+
+    const tweets = await listTweetsService.execute()
+
+    response.json({ data: tweets })
+  }
+
+  public async create(
+    request: NextApiRequest,
+    response: NextApiResponse,
+  ): Promise<void> {
+    const { text } = request.body
 
     const createTweetService = new CreateTweetService()
 
     const tweet = await createTweetService.execute({ text })
 
-    res.json({ data: tweet })
+    response.json({ data: tweet })
   }
 }
 
