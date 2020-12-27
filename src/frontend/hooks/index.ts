@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { User } from '@prisma/client'
+import { User, Tweet } from '@prisma/client'
 import { api } from '@frontend/services/api'
 
 interface IGetFeedRequest {
@@ -8,7 +8,7 @@ interface IGetFeedRequest {
 
 interface IUseFeedResponse {
   feed: ITweet[]
-  addItemOnFeed(tweet: ITweet): void
+  addItemOnFeed(tweet: Tweet): void
   isFeedLoading: boolean
 }
 
@@ -29,13 +29,25 @@ export const useFeed = (): IUseFeedResponse => {
 }
 
 interface IUseMeResponse {
-  me: User
+  data: User
 }
 
-export const useMe = (): IUseMeResponse => {
-  const { data } = useSWR<User>('me', api)
+interface IUseMe {
+  me: User
+  refreshMe(user?: User): Promise<void>
+}
+
+export const useMe = (): IUseMe => {
+  const { data, mutate } = useSWR<IUseMeResponse>('me', api, {
+    shouldRetryOnError: false,
+  })
+
+  async function refreshMe(user?: User): Promise<void> {
+    mutate({ data: user })
+  }
 
   return {
-    me: data,
+    me: data?.data,
+    refreshMe,
   }
 }

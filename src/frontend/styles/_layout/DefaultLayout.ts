@@ -12,6 +12,7 @@ export const Container = styled.div`
 export const ChildrenContainer = styled.div`
   max-width: 1120px;
   width: calc(100% - 320px);
+  height: 100%;
   margin: 16px 0;
 
   @media (max-width: 600px) {

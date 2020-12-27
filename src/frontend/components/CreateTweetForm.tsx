@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import { Button, Input, notification } from 'antd'
+import { Tweet } from '@prisma/client'
 
-import { useFeed } from '@frontend/hooks'
+import { useFeed, useMe } from '@frontend/hooks'
 import { api } from '@frontend/services/api'
 
 import { Form } from '@styles/components/CreateTweetForm'
@@ -15,17 +16,17 @@ const CreateTweetForm: FC = () => {
 
   const [form] = Form.useForm()
 
+  const { me } = useMe()
+
   async function handleSubmit(values: IFormValues): Promise<void> {
     const { tweet } = values
 
+    const createdTweet = (await api('tweet', { text: tweet }))?.data as Tweet
+
     const newTweet: ITweet = {
-      text: tweet,
-      author: { username: 'Adriel' },
+      ...createdTweet,
+      author: me,
     }
-
-    const _tweet = await api('tweet', { text: tweet })
-
-    console.log(_tweet)
 
     addItemOnFeed(newTweet)
 

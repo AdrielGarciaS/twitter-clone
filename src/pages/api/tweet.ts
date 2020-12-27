@@ -1,5 +1,6 @@
-import TweetsController from '@backend/controllers/TweetsController'
 import { NextApiRequest, NextApiResponse } from 'next'
+
+import TweetsController from '@backend/controllers/TweetsController'
 
 const tweetRouter = async (
   request: NextApiRequest,
@@ -15,6 +16,9 @@ const tweetRouter = async (
       break
     case 'GET':
       tweetsController.index(request, response)
+      break
+    default:
+      response.status(404)
       break
   }
 }

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Card } from 'antd'
+import { Card, Comment } from 'antd'
 
 export const Container = styled.div`
   border-radius: 4px;
@@ -11,7 +11,7 @@ export const Container = styled.div`
   width: 100%;
 `
 
-export const Tweet = styled(Card)`
+export const Tweet = styled(Comment)`
   width: 60vw;
   max-width: 900px;
   padding: 15px;
@@ -19,7 +19,13 @@ export const Tweet = styled(Card)`
   border: 1px solid #f0f0f0;
   border-radius: 4px;
 
-  p {
-    font-weight: bold;
+  .ant-comment-content-author-name {
+    font-size: 12px;
+    margin-right: auto;
+  }
+
+  .ant-comment-content-detail {
+    font-size: 16px;
+    margin-top: 16px;
   }
 `
