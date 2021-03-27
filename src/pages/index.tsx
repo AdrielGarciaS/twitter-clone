@@ -2,10 +2,11 @@ import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
 import { Input, message } from 'antd'
 import { mutate } from 'swr'
+import { signIn, signOut, useSession } from 'next-auth/client'
 
 import { Container, Button, Form } from '@styles/pages/auth'
 import { api } from '@frontend/services/api'
-import { useMe } from '@frontend/hooks'
+import { GetServerSideProps } from 'next'
 
 interface IAuthForm {
   username: string
@@ -16,11 +17,15 @@ const Auth: FC = () => {
   const [isLogin, setIsLogin] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [session] = useSession()
+
+  console.log(session)
+
   const router = useRouter()
 
-  const { me } = useMe()
-
-  if (me?.username) router.push('feed')
+  // useEffect(() => {
+  //   if (session) router.push('feed')
+  // }, [session])
 
   const [form] = Form.useForm()
 
@@ -28,6 +33,10 @@ const Auth: FC = () => {
     setLoading(true)
 
     const { username, password } = values
+
+    signIn('login', values)
+
+    return
 
     const url = isLogin ? 'authenticate' : 'user'
 
@@ -50,8 +59,14 @@ const Auth: FC = () => {
     setIsLogin(state => !state)
   }
 
+  function handleGithubSignIn() {
+    signIn('github')
+  }
+
   return (
     <Container>
+      {session?.user.name}
+
       <Form form={form} onFinish={handleSubmit}>
         <Form.Item
           label="Username"
@@ -83,6 +98,10 @@ const Auth: FC = () => {
           {isLogin ? 'New? Sign Up' : 'Already has an user? Log In'}
         </a>
       </Form>
+
+      <Button onClick={handleGithubSignIn}>Github</Button>
+
+      <Button onClick={() => signOut()}>Sign out</Button>
     </Container>
   )
 }

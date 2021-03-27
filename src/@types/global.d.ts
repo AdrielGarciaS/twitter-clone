@@ -1,7 +1,11 @@
-import { User, Tweet } from '@prisma/client'
+import { Tweet } from '@prisma/client'
 
 declare global {
   interface ITweet extends Tweet {
-    author: User
+    author: {
+      name: string
+      email: string
+      image: string
+    }
   }
 }

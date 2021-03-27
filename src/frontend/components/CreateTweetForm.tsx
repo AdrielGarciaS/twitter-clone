@@ -6,6 +6,7 @@ import { useFeed, useMe } from '@frontend/hooks'
 import { api } from '@frontend/services/api'
 
 import { Form } from '@styles/components/CreateTweetForm'
+import { useSession } from 'next-auth/client'
 
 interface IFormValues {
   tweet: string
@@ -16,16 +17,24 @@ const CreateTweetForm: FC = () => {
 
   const [form] = Form.useForm()
 
-  const { me } = useMe()
+  const [session] = useSession()
+
+  console.log(session)
 
   async function handleSubmit(values: IFormValues): Promise<void> {
     const { tweet } = values
 
     const createdTweet = (await api('tweet', { text: tweet }))?.data as Tweet
 
+    const { email, image, name } = session.user
+
     const newTweet: ITweet = {
       ...createdTweet,
-      author: me,
+      author: {
+        email,
+        image,
+        name,
+      },
     }
 
     addItemOnFeed(newTweet)
@@ -40,6 +49,7 @@ const CreateTweetForm: FC = () => {
 
   return (
     <Form form={form} onFinish={handleSubmit}>
+      {session?.user.name}
       <Form.Item
         name="tweet"
         rules={[

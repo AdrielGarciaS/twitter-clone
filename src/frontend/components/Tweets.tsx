@@ -7,6 +7,7 @@ import { useFeed } from '@frontend/hooks'
 import { Container, Tweet } from '@styles/components/Tweets'
 import { GetServerSideProps } from 'next'
 import { api } from '@frontend/services/api'
+import { useSession } from 'next-auth/client'
 
 interface TweetsProps {
   feed: ITweet[]
@@ -39,7 +40,7 @@ const Tweets: FC = () => {
         {tweets.map((tweet, index) => (
           <Tweet
             key={index}
-            author={tweet.author.username}
+            author={tweet.author.name}
             content={tweet.text}
             datetime={tweet.formattedCreatedAt}
           />
@@ -49,16 +50,16 @@ const Tweets: FC = () => {
   )
 }
 
-// export const getServerSideProps: GetServerSideProps<TweetsProps> = async context => {
-//   // const { feed } = useFeed()
+export const getServerSideProps: GetServerSideProps<TweetsProps> = async context => {
+  // const { feed } = useFeed()
 
-//   const tweets = await api('tweets')
+  const tweets = await api('tweets')
 
-//   console.log(tweets)
+  console.log(tweets)
 
-//   return {
-//     props: { feed: tweets },
-//   }
-// }
+  return {
+    props: { feed: tweets },
+  }
+}
 
 export default Tweets

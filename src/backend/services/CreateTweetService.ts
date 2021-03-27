@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Tweet } from '@prisma/client'
 
 interface ICreateTweetServiceDTO {
   text: string
-  username: string
+  userId: number
 }
 
 class CreateTweetService {
@@ -10,12 +10,12 @@ class CreateTweetService {
 
   public async execute({
     text,
-    username,
-  }: ICreateTweetServiceDTO): Promise<any> {
+    userId,
+  }: ICreateTweetServiceDTO): Promise<Tweet> {
     this.prisma = new PrismaClient()
 
     const tweet = await this.prisma.tweet.create({
-      data: { text, author: { connect: { username } } },
+      data: { text, author: { connect: { id: userId } } },
     })
 
     return tweet

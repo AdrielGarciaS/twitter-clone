@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getSession } from 'next-auth/client'
 
 import CreateTweetService from '@backend/services/CreateTweetService'
 import ListTweetsService from '@backend/services/ListTweetsService'
-import getTokenData from '@backend/utils/getTokenData'
 
 class TweetsController {
   public async index(
@@ -22,18 +22,20 @@ class TweetsController {
   ): Promise<void> {
     const { text } = request.body
 
-    const { token } = request.cookies
+    const session = await getSession({ req: request })
 
-    if (!token) {
+    console.log(session)
+
+    if (!session?.user) {
       response.status(400).json({ error: 'You must be logged to tweet.' })
       return
     }
 
-    const { username } = getTokenData(token)
+    // const { id: userId } = session
 
     const createTweetService = new CreateTweetService()
 
-    const tweet = await createTweetService.execute({ text, username })
+    const tweet = await createTweetService.execute({ text, email })
 
     response.json({ data: tweet })
   }

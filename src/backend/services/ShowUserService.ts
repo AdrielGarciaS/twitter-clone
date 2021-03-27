@@ -18,8 +18,6 @@ class CreateAuthenticationService {
 
     if (!user) return
 
-    delete user.password
-
     return user
   }
 }
